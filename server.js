@@ -30,10 +30,26 @@ app.get("/api/notes", function(req, res) {
     
 });
 
-app.post("/api/notes", function(req, res) {
-
-    
-});
+app.post("/api/notes", function (req, res) {
+    fs.readFile(__dirname + "/db/db.json", 'utf8', function (error, notes) {
+      if (error) {
+        return console.log(error)
+      }
+      notes = JSON.parse(notes);
+      let id = notes.notes[notes.notes.length - 1].id + 1
+      let newNote = req.body;
+      newNote.id = id;
+      notes.notes.push(newNote);
+  
+      fs.writeFile(__dirname + "/db/db.json", JSON.stringify(notes), function (error, data) {
+        if (error) {
+          return error
+        }
+        console.log(newNote)
+        res.json(newNote);
+      })
+    })
+  })
 
 app.delete("/api/notes/:id", function(req, res){
 
@@ -49,11 +65,6 @@ app.listen(PORT, function() {
 });
 
 
-async function writeIt(input){
-    fs.appendFile("./db/db.json", input, (err) => {
-    if(err) throw err;
-    console.log("file has been written")})
-}
 
 // :3 :3 :3
 //johnwestermeyer.github.io
