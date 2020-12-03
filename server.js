@@ -3,7 +3,6 @@
 var express = require("express");
 var path = require("path");
 var fs = require("fs");
-const { inherits } = require("util");
 
 // Sets up the Express App
 // =============================================================
@@ -45,12 +44,8 @@ app.post("/api/notes", function (req, res) {
       newNote.id = id;
       notes.notes.push(newNote);
   
-      fs.writeFile(__dirname + "/db/db.json", JSON.stringify(notes), function (error, data) {
-        if (error) {
-          return error
-        }
-        res.json(newNote);
-      })
+      writeToFile(JSON.stringify(notes))
+      res.json(newNote);
     })
   })
 
@@ -66,13 +61,9 @@ app.delete("/api/notes/:id", function(req, res){
         notes.notes.splice(i,1);        
       }
     }
+    writeToFile(JSON.stringify(notes));
     
-    fs.writeFile(__dirname + "/db/db.json", JSON.stringify(notes), function (error, data) {
-      if (error) {
-        return error
-      }
-      res.json(notes);
-  })
+    res.json(notes);
   })
 })
 
@@ -84,6 +75,15 @@ app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
 });
 
+
+function writeToFile(input){
+  fs.writeFile(__dirname + "/db/db.json", input, function (error, data) {
+    if (error) {
+      return error
+    }
+    return;
+  })
+}
 
 // :3 :3 :3
 //johnwestermeyer.github.io
