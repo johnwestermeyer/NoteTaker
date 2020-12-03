@@ -36,7 +36,10 @@ app.post("/api/notes", function (req, res) {
         return console.log(error)
       }
       notes = JSON.parse(notes);
-      let id = JSON.stringify(parseFloat(notes.notes[notes.notes.length - 1].id) + 1)
+      let id = "1";
+      if(notes.notes.length > 0){
+        id = JSON.stringify(parseFloat(notes.notes[notes.notes.length - 1].id) + 1)}
+      
       let newNote = req.body;
       newNote.id = id;
       notes.notes.push(newNote);
@@ -58,13 +61,18 @@ app.delete("/api/notes/:id", function(req, res){
     }
     notes = JSON.parse(notes);
     for(let i = 0; i < notes.notes.length; i++){
-      if(notes.notes.id === id){
-        notes.notes.splice(i,1);
+      if(notes.notes[i].id === id){
+        notes.notes.splice(i,1);        
       }
     }
     
+    fs.writeFile(__dirname + "/db/db.json", JSON.stringify(notes), function (error, data) {
+      if (error) {
+        return error
+      }
+      res.json(notes);
   })
-
+  })
 })
 
 app.get("*", function(req, res) {
