@@ -36,7 +36,7 @@ app.post("/api/notes", function (req, res) {
         return console.log(error)
       }
       notes = JSON.parse(notes);
-      let id = parseFloat(notes.notes[notes.notes.length - 1].id) + 1
+      let id = JSON.stringify(parseFloat(notes.notes[notes.notes.length - 1].id) + 1)
       let newNote = req.body;
       newNote.id = id;
       notes.notes.push(newNote);
@@ -51,7 +51,19 @@ app.post("/api/notes", function (req, res) {
   })
 
 app.delete("/api/notes/:id", function(req, res){
-  console.log(req.params.id);
+  let id = req.params.id;
+  fs.readFile(__dirname + "/db/db.json", 'utf8', function (error, notes) {
+    if (error) {
+      return console.log(error)
+    }
+    notes = JSON.parse(notes);
+    for(let i = 0; i < notes.notes.length; i++){
+      if(notes.notes.id === id){
+        notes.notes.splice(i,1);
+      }
+    }
+    
+  })
 
 })
 
