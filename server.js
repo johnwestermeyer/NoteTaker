@@ -36,7 +36,7 @@ app.post("/api/notes", function (req, res) {
         return console.log(error)
       }
       notes = JSON.parse(notes);
-      let id = notes.notes[notes.notes.length - 1].id + 1
+      let id = parseFloat(notes.notes[notes.notes.length - 1].id) + 1
       let newNote = req.body;
       newNote.id = id;
       notes.notes.push(newNote);
