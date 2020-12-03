@@ -8,6 +8,7 @@ var fs = require("fs");
 // =============================================================
 var app = express();
 var PORT = process.env.PORT || 3000;
+var dbPath = "/db/db.json";
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -23,7 +24,7 @@ app.get("/notes", function(req, res) {
 });
 
 app.get("/api/notes", function(req, res) {   
-    fs.readFile(__dirname + "/db/db.json", "utf8", (err, data) => {
+    fs.readFile(__dirname + dbPath, "utf8", (err, data) => {
         if(err){
             console.log(err);
             return;
@@ -35,7 +36,7 @@ app.get("/api/notes", function(req, res) {
 });
 
 app.post("/api/notes", function (req, res) {
-    fs.readFile(__dirname + "/db/db.json", 'utf8', function (error, notes) {
+    fs.readFile(__dirname + dbPath, 'utf8', function (error, notes) {
       if (error) {
         return console.log(error)
       }
@@ -55,7 +56,7 @@ app.post("/api/notes", function (req, res) {
 
 app.delete("/api/notes/:id", function(req, res){
   let id = req.params.id;
-  fs.readFile(__dirname + "/db/db.json", 'utf8', function (error, notes) {
+  fs.readFile(__dirname + dbPath, 'utf8', function (error, notes) {
     if (error) {
       return console.log(error)
     }
@@ -83,7 +84,7 @@ app.listen(PORT, function() {
 
 
 function writeToFile(input){
-  fs.writeFile(__dirname + "/db/db.json", input, function (error, data) {
+  fs.writeFile(__dirname + dbPath, input, function (error, data) {
     if (error) {
       return error
     }
