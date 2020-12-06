@@ -32,11 +32,11 @@ app.get("/api/notes", function(req, res) {
 });
 
 app.post("/api/notes", function (req, res) {
-    fs.readFile(__dirname + dbPath, 'utf8', function (error, notes) {
-      if (error) {
-        return console.log(error)
-      }
-      notes = JSON.parse(notes);
+    // fs.readFile(__dirname + dbPath, 'utf8', function (error, notes) {
+    //   if (error) {
+    //     return console.log(error)
+    //   }
+      notes = db;
       let id = "1";
       if(notes.notes.length > 0){
         id = JSON.stringify(parseFloat(notes.notes[notes.notes.length - 1].id) + 1)}
@@ -47,8 +47,8 @@ app.post("/api/notes", function (req, res) {
   
       writeToFile(JSON.stringify(notes))
       res.json(newNote);
-    })
-  })
+    // })
+  });
 
 app.delete("/api/notes/:id", function(req, res){
   let id = req.params.id;
