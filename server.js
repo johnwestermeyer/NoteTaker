@@ -3,6 +3,7 @@
 var express = require("express");
 var path = require("path");
 var fs = require("fs");
+const db = require("./db/db.json");
 
 // Sets up the Express App
 // =============================================================
@@ -15,6 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
+
+
 app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "public/index.html"));
 });
@@ -23,16 +26,9 @@ app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "public/notes.html"));
 });
 
-app.get("/api/notes", function(req, res) {   
-    fs.readFile(__dirname + dbPath, "utf8", (err, data) => {
-        if(err){
-            console.log(err);
-            return;
-        }
-        let notes = JSON.parse(data);
-        res.json(notes.notes);
-    });
-    
+app.get("/api/notes", function(req, res) {
+        let notes = db;
+        res.json(notes.notes);    
 });
 
 app.post("/api/notes", function (req, res) {
