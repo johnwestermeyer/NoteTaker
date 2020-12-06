@@ -25,18 +25,14 @@ app.get("/", function(req, res) {
 app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "public/notes.html"));
 });
-
+//get notes route
 app.get("/api/notes", function(req, res) {
         let notes = db;
         res.json(notes.notes);    
 });
-
+//add note route
 app.post("/api/notes", function (req, res) {
-    // fs.readFile(__dirname + dbPath, 'utf8', function (error, notes) {
-    //   if (error) {
-    //     return console.log(error)
-    //   }
-      notes = db;
+      let notes = db;
       let id = "1";
       if(notes.notes.length > 0){
         id = JSON.stringify(parseFloat(notes.notes[notes.notes.length - 1].id) + 1)}
@@ -47,16 +43,11 @@ app.post("/api/notes", function (req, res) {
   
       writeToFile(JSON.stringify(notes))
       res.json(newNote);
-    // })
   });
-
+//delete note route
 app.delete("/api/notes/:id", function(req, res){
-  let id = req.params.id;
-  fs.readFile(__dirname + dbPath, 'utf8', function (error, notes) {
-    if (error) {
-      return console.log(error)
-    }
-    notes = JSON.parse(notes);
+    let id = req.params.id;
+    let notes = db;
     for(let i = 0; i < notes.notes.length; i++){
       if(notes.notes[i].id === id){
         notes.notes.splice(i,1);        
@@ -65,20 +56,17 @@ app.delete("/api/notes/:id", function(req, res){
     writeToFile(JSON.stringify(notes));
     
     res.json(notes);
-  })
-})
+});
 
 app.get("*", function(req, res) {
     res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
-
-
 app.listen(PORT, function() {
     console.log("App listening on PORT " + PORT);
 });
 
-
+//write to file function for writing to files functionally 
 function writeToFile(input){
   fs.writeFile(__dirname + dbPath, input, function (error, data) {
     if (error) {
